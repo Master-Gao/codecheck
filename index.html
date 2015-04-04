@@ -1,0 +1,110 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>验证码</title>
+<style type="text/css">
+	div.check_code_div{width:100%; height:125px;}
+</style>
+</head>
+<body>
+	<div class="check_code_div">
+		<h3>1.数字验证码</h3>
+		<p>
+			验证码：<input type="text" id="code_num_text" value="" maxlength="4" />  
+			<img src="CodeFactory.php?type=num" id="code_num_img" title="看不清，点击换一张" onClick="changeImg(this)" style="cursor:pointer;">
+		</p> 
+		<p>
+			<input type="button" id="code_num_btn" value="提交" onClick="verify(this.id)"/>
+		</p> 
+	</div>
+	<div class="check_code_div">
+		<h3>2.数字+字母验证码</h3>
+		<p>
+			验证码：<input type="text" id="code_char_text" value="" maxlength="4" />  
+			<img src="CodeFactory.php?type=char" id="code_char_img" title="看不清，点击换一张" onClick="changeImg(this)" style="cursor:pointer;">
+		</p> 
+		<p>
+			<input type="button" id="code_char_btn" value="提交" onClick="verify(this.id)"/>
+		</p> 
+	</div>
+	<div class="check_code_div">
+		<h3>3.中文验证码</h3>
+		<p>
+			验证码：<input type="text" id="code_chinese_text" value="" maxlength="4" />  
+			<img src="CodeFactory.php?type=chinese" id="code_chinese_img" title="看不清，点击换一张" onClick="changeImg(this)" style="cursor:pointer;">
+		</p> 
+		<p>
+			<input type="button" id="code_chinese_btn" value="提交" onClick="verify(this.id)"/>
+		</p> 
+	</div>
+	<div class="check_code_div">
+		<h3>4.仿Google验证码</h3>
+		<p>
+			验证码：<input type="text" id="code_google_text" value="" maxlength="4" />  
+			<img src="CodeFactory.php?type=google" id="code_google_img" title="看不清，点击换一张" onClick="changeImg(this)" style="cursor:pointer;">
+		</p> 
+		<p>
+			<input type="button" id="code_google_btn" value="提交" onClick="verify(this.id)"/>
+		</p> 
+	</div>
+	<div class="check_code_div">
+		<h3>5.算术验证码</h3>
+		<p>
+			验证码：<input type="text" id="code_math_text" value="" maxlength="4" />  
+			<img src="CodeFactory.php?type=math" id="code_math_img" title="看不清，点击换一张" onClick="changeImg(this)" style="cursor:pointer;">
+		</p> 
+		<p>
+			<input type="button" id="code_math_btn" value="提交" onClick="verify(this.id)"/>
+		</p> 
+	</div>
+	<script type="text/javascript">
+		//点击鼠标改变验证码图片
+		function changeImg(currentImg){
+			currentImg.src=currentImg.src;//这里只是重新请求了一个新的验证码图片
+		}
+		//点击提交按钮发送验证码
+		function verify(code_btn){
+			var text_id = code_btn.replace(/btn/,"text");
+			var code_text = document.getElementById(text_id).value;
+			var xmlHttp = getXMLHttpRequest();
+			if(xmlHttp){
+				var url="CodeCheck.php";
+				var postBody = text_id+"="+code_text;
+				xmlHttp.open("POST",url,true);
+				xmlHttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+				xmlHttp.send(postBody);
+				xmlHttp.onreadystatechange=function(){
+					if (xmlHttp.readyState==4){ 
+						if(xmlHttp.responseText == 1){ 
+							alert("验证码正确！"); 
+						}else{ 
+							alert("验证码错误！"); 
+						} 
+					}
+				};
+			}
+		}
+		function getXMLHttpRequest(){
+			var xmlHttp = false;
+			try{
+			    // Firefox, Opera 8.0+, Safari
+				xmlHttp=new XMLHttpRequest();
+			}catch (e){
+			   // Internet Explorer
+			   try{
+				   xmlHttp=new ActiveXObject("Msxml2.XMLHTTP");
+			   }catch (e){
+				  try{
+					  xmlHttp=new ActiveXObject("Microsoft.XMLHTTP");
+				  }catch (e){
+					  alert("您的浏览器不支持AJAX！");
+					  xmlHttp = false;
+				  }
+			   }
+		    }
+			return xmlHttp;
+		}
+	</script>
+</body>
+</html>
